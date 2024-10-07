@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: file_names, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+import 'package:recipe_app/utils/theme/theme.dart';
 
 import 'package:recipe_app/widgets/bookmark.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,11 +9,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:recipe_app/widgets/image_path.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class DetailsPage extends StatelessWidget {
+class DetailsPage extends StatefulWidget {
   final String? img;
   final String? title;
   final String? subtitle;
   final String? des;
+  final num? rating;
+  final num? time;
+  final String? level;
+  final double? cal;
   final String? ingredient_1;
   final String? ingredient_2;
   final String? ingredient_3;
@@ -25,11 +29,15 @@ class DetailsPage extends StatelessWidget {
   final String? ingredient_9;
   final String? ingredient_10;
   final BuildContext? context;
-  DetailsPage(
-      {this.img,
+  const DetailsPage(
+      {super.key, this.img,
       this.title,
       this.subtitle,
       this.des,
+      this.rating,
+      this.time,
+      this.level,
+      this.cal,
       this.ingredient_1,
       this.ingredient_2,
       this.ingredient_3,
@@ -40,10 +48,19 @@ class DetailsPage extends StatelessWidget {
       this.ingredient_8,
       this.ingredient_9,
       this.ingredient_10,
-      this.context}) {}
+      this.context});
+
+  @override
+  State<DetailsPage> createState() => _DetailsPageState();
+}
+
+class _DetailsPageState extends State<DetailsPage> {
+  double draggableContainerHeight = 0.0;
+  int current = 0;
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context);
     return Scaffold(
         body: Stack(
       // used stack here for allows to position multiple child widgets on top of each other within its designated area.
@@ -53,7 +70,7 @@ class DetailsPage extends StatelessWidget {
             items: [
               // items should contain the list of images,[remember : provide a list of images to slide : here only one image is sliding]
               Image.asset(
-                "$img",
+                "${widget.img}",
                 fit: BoxFit.cover,
                 width: MediaQuery.of(context).size.width,
               ),
@@ -104,8 +121,11 @@ class DetailsPage extends StatelessWidget {
               // icons on the top of the image
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.white
+                      : Colors.black,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: IconButton(
                     onPressed: () {
                       Navigator.of(context).pop(); // going back
@@ -117,7 +137,10 @@ class DetailsPage extends StatelessWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    // color: Colors.white,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.black,
                     borderRadius: BorderRadius.circular(20)),
                 child: IconButton(
                     onPressed: () {
@@ -139,13 +162,14 @@ class DetailsPage extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Container(
                 // conatiner contain the details are passed from the home page
-                // height: MediaQuery.of(context).size.height / 1.8,
+                height: MediaQuery.of(context).size.height / 1.2,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    // color: Colors.white,
                     borderRadius: BorderRadius.circular(20)),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
+                  padding: const EdgeInsets.only(
+                      left: 25, right: 25, top: 25, bottom: 55),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -163,14 +187,15 @@ class DetailsPage extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        title!, // title frm the home page
+                                        widget
+                                            .title!, // title frm the home page
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        subtitle!,
+                                        widget.subtitle!,
                                         style: const TextStyle(
                                             fontSize: 12, color: Colors.grey),
                                       ),
@@ -179,21 +204,19 @@ class DetailsPage extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 10),
-                                  child: Container(
-                                    child: const Row(
-                                      // [remember : we should make this dynamic, based on the varies dishes ]
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        Text(
-                                          " 4.5",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w900),
-                                        )
-                                      ],
-                                    ),
+                                  child: Row(
+                                    // [remember : we should make this dynamic, based on the varies dishes ]
+                                    children: [
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      Text(
+                                        "${widget.rating!}",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w900),
+                                      )
+                                    ],
                                   ),
                                 ),
                               ],
@@ -206,16 +229,17 @@ class DetailsPage extends StatelessWidget {
                             child: Row(
                               children: [
                                 //user defined method for Styling icons and text
-                                iconsRow(Icons.access_time, "10 mins"),
-                                const SizedBox(
-                                  width: 10,
-                                ),
                                 iconsRow(
-                                    Icons.signal_cellular_alt_sharp, "Medium"),
+                                    Icons.access_time, "${widget.time!} mins"),
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                iconsRow(Icons.whatshot, "512 Cal"),
+                                iconsRow(Icons.signal_cellular_alt_sharp,
+                                    widget.level!),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                iconsRow(Icons.whatshot, "${widget.cal!} Cal"),
                               ],
                             )),
                         Column(
@@ -240,7 +264,7 @@ class DetailsPage extends StatelessWidget {
                               height: 15,
                             ),
                             Text(
-                              des!, // the description from the home page
+                              widget.des!, // the description from the home page
                               style: GoogleFonts.roboto(
                                   fontSize: 12, color: Colors.grey),
                             )
@@ -268,26 +292,26 @@ class DetailsPage extends StatelessWidget {
                             Column(
                               children: [
                                 // Listview method is a userdefined method for give ingredients
-                                listviewMethod("assets/images/sugar.png",
-                                    ingredient_1!, "160 g"),
-                                listviewMethod("assets/images/olive-oli.png",
-                                    ingredient_2!, "160 g"),
-                                listviewMethod("assets/images/chocolate.png",
-                                    ingredient_3!, "110 g"),
-                                listviewMethod("assets/images/sugar.png",
-                                    ingredient_4!, "110 g"),
-                                listviewMethod("assets/images/sugar.png",
-                                    ingredient_5!, "110 g"),
-                                listviewMethod("assets/images/sugar.png",
-                                    ingredient_6!, "110 g"),
-                                listviewMethod("assets/images/sugar.png",
-                                    ingredient_7!, "110 g"),
-                                listviewMethod("assets/images/sugar.png",
-                                    ingredient_8!, "110 g"),
-                                listviewMethod("assets/images/sugar.png",
-                                    ingredient_9!, "110 g"),
-                                listviewMethod("assets/images/sugar.png",
-                                    ingredient_10!, "110 g"),
+                                listviewMethod("assets/images/Row-pasta.png",
+                                    widget.ingredient_1!, "160 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_2!, "160 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_3!, "110 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_4!, "110 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_5!, "110 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_6!, "110 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_7!, "110 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_8!, "110 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_9!, "110 g"),
+                                listviewMethod(
+                                    "", widget.ingredient_10!, "110 g"),
                               ],
                             )
                           ],
@@ -310,7 +334,7 @@ class DetailsPage extends StatelessWidget {
       children: [
         Row(
           children: [
-            Container(
+            SizedBox(
                 width: 50,
                 height: 50,
                 child: ClipRRect(
@@ -344,6 +368,7 @@ class DetailsPage extends StatelessWidget {
         widthMethod(), //size box with width
         Text(
           text,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontSize: 12, color: Colors.grey),
         )
       ],
@@ -443,31 +468,44 @@ class _DraggableState extends State<Draggable> {
       return DraggableScrollableSheet(
         key: sheet,
         initialChildSize: 0.5, // half the screen height
-        maxChildSize: 0.95, //fully expanded almost full scrn
-        minChildSize: 0, //completely hidden
+        maxChildSize: 0.80, //fully expanded almost full scrn
+        // minChildSize: 0, //completely hidden
+        // initialChildSize: 0.6, // Adjust initial size as needed
+        // minChildSize: 0.3, // Set minimum size to 30% of screen height
+        // maxChildSize: 0.9,
+        shouldCloseOnMinExtent: true,
         expand: true,
         snap: true,
-        snapSizes: [
-          70 / Constraints.maxHeight,
-          0.5
-        ], // it define the size ,the sheet snap during the dragging 70% of the screen height and 50% of the screen height
+        snapSizes: const [0.55, 0.8],
+        // snapSizes: [
+        //   70 / Constraints.maxHeight,
+        //   0.5
+        // ], // it define the size ,the sheet snap during the dragging 70% of the screen height and 50% of the screen height
         builder: (BuildContext context, ScrollController scrollController) {
+          final theme = Theme.of(context);
           // build the content with in the sheet
-          return DecoratedBox(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            ),
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                toButtonIndicator(), // bottom indicator
-                SliverToBoxAdapter(
-                  // the content frm draggable
-                  child: widget.child,
-                )
-              ],
+          return Theme(
+            data: theme.brightness == Brightness.light
+                ? AppTheme.LightTheme
+                : AppTheme
+                    .DarkTheme, //the background color of the draggable scrollable sheet
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+              ),
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  toButtonIndicator(), // bottom indicator
+                  SliverToBoxAdapter(
+                    // the content frm draggable
+                    child: widget.child,
+                  )
+                ],
+              ),
             ),
           );
         },
@@ -479,33 +517,29 @@ class _DraggableState extends State<Draggable> {
 // button indicator used in the draggable
 SliverToBoxAdapter toButtonIndicator() {
   return SliverToBoxAdapter(
-    child: Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            child: Center(
-              child: Wrap(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Container(
-                      width: 50,
-                      height: 5,
-                      decoration: const BoxDecoration(
-                          color: Color.fromRGBO(212, 210, 210, 1),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
-                      margin: EdgeInsets.only(top: 0, bottom: 0),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Center(
+          child: Wrap(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Container(
+                  width: 50,
+                  height: 5,
+                  decoration: const BoxDecoration(
+                      color: Color.fromRGBO(212, 210, 210, 1),
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  margin: const EdgeInsets.only(top: 0, bottom: 0),
+                ),
+              )
+            ],
+          ),
+        )
+      ],
     ),
   );
 }

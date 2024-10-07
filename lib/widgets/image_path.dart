@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 List<String> recommentation = [
@@ -8,6 +9,20 @@ List<String> recommentation = [
   "assets/images/recipe_4.jpeg"
 ];
 
+// ignore: duplicate_ignore
+// ignore: non_constant_identifier_names
+List<Text> Chicken_brocolli_ingredients = [
+  const Text("Chicken"),
+  const Text("Broccoli"),
+  const Text("soy sauce & lemon juice"),
+  const Text("olive oil"),
+  const Text("honey"),
+  const Text("garlic & ginger"),
+  const Text("pepper"),
+  const Text("Chopped fresh parsley"),
+  const Text("Toasted sesame seeds"),
+  const Text("sesame oil ")
+];
 List<String> items = [
   "assets/images/pan.png",
   "assets/images/lunch.png",
@@ -25,6 +40,51 @@ List<String> items_text = [
   "Soup",
   "Pudding",
   "Sweets"
+];
+
+// ignore: duplicate_ignore
+// ignore: non_constant_identifier_names
+List<Image> cremy_pasta_ingredients_img = [
+  Image.asset(
+    "assets/images/Pasta_row.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Olive oil.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Garlic.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Butter.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Chicken broth.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Salt.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Black pepper.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Heavy cream.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Parmesan cheese.png",
+    fit: BoxFit.cover,
+  ),
+  Image.asset(
+    "assets/images/Dried parsley.png",
+    fit: BoxFit.cover,
+  ),
 ];
 List<String> macarons_ingredients = [
   "Granulated sugar",
